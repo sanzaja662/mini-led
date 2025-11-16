@@ -1,83 +1,251 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lampu Mini Hias – Rp10.000</title>
-
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Lampu Mini Hias — Rp10.000</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-      margin: 0;
-      padding: 0;
-      text-align: center;
+    :root{
+      --bg1:#eef6fb;
+      --bg2:#f8fbff;
+      --card:#ffffff;
+      --accent:#06a6e3;
+      --accent-2:#00c4ff;
+      --muted:#6b7280;
+      --radius:16px;
     }
-    .container {
-      max-width: 500px;
-      margin: auto;
-      background: white;
-      padding: 20px;
-      margin-top: 20px;
-      border-radius: 12px;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    *{box-sizing:border-box}
+    body{
+      min-height:100vh;
+      margin:0;
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
+      background: radial-gradient(1200px 600px at 10% 10%, rgba(6,166,227,0.06), transparent 10%),
+                  radial-gradient(800px 400px at 90% 90%, rgba(0,196,255,0.04), transparent 10%),
+                  linear-gradient(180deg,var(--bg1),var(--bg2));
+      display:flex;
+      align-items:flex-start;
+      justify-content:center;
+      padding:48px 12px;
+      color:#0f172a;
     }
-    img {
-      width: 100%;
-      border-radius: 10px;
-      margin-bottom: 15px;
+
+    /* floating decorative circles */
+    .decor{
+      position:fixed;
+      inset:auto 20px 40px auto;
+      width:120px;height:120px;
+      border-radius:50%;
+      background:linear-gradient(180deg, rgba(6,166,227,0.12), rgba(0,196,255,0.06));
+      filter:blur(16px);
+      z-index:0;
+      transform:translateY(0);
+      animation: drift 8s linear infinite;
+      opacity:0.9;
     }
-    h1 {
-      font-size: 24px;
-      margin-bottom: 5px;
+    @keyframes drift{
+      0%{transform:translateY(0) translateX(0)}
+      50%{transform:translateY(-18px) translateX(-8px)}
+      100%{transform:translateY(0) translateX(0)}
     }
-    .price {
-      font-size: 22px;
-      color: #0ea5e9;
-      font-weight: bold;
-      margin-bottom: 15px;
+
+    .card{
+      position:relative;
+      z-index:2;
+      width:100%;
+      max-width:420px;
+      background:var(--card);
+      border-radius:var(--radius);
+      padding:18px;
+      box-shadow: 0 18px 50px rgba(2,6,23,0.09);
+      text-align:center;
+      overflow:visible;
     }
-    .desc {
-      font-size: 16px;
-      color: #444;
-      line-height: 1.5;
-      margin-bottom: 20px;
+
+    .image-wrap{
+      position:relative;
+      border-radius:12px;
+      overflow:hidden;
+      margin-bottom:14px;
+      background:linear-gradient(180deg, rgba(14,165,233,0.04), rgba(14,165,233,0.01));
+      padding:12px;
     }
-    .btn {
-      padding: 12px 20px;
-      background: #0ea5e9;
-      color: white;
-      text-decoration: none;
-      border-radius: 8px;
-      font-weight: bold;
-      display: inline-block;
+
+    /* glow behind image */
+    .glow{
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-40%);
+      width:260px;height:160px;
+      background:radial-gradient(circle at 50% 40%, rgba(0,196,255,0.28), rgba(6,166,227,0.08) 40%, transparent 55%);
+      filter:blur(18px);
+      z-index:0;
+      pointer-events:none;
+      animation:glowPulse 2.5s ease-in-out infinite;
     }
-    .btn:hover {
-      background: #0284c7;
+    @keyframes glowPulse{
+      0%{opacity:0.9; transform:translate(-50%,-40%) scale(0.98)}
+      50%{opacity:1; transform:translate(-50%,-40%) scale(1.04)}
+      100%{opacity:0.9; transform:translate(-50%,-40%) scale(0.98)}
+    }
+
+    .hero-img{
+      position:relative;
+      z-index:1;
+      width:100%;
+      max-height:280px;
+      object-fit:cover;
+      border-radius:8px;
+      box-shadow:0 8px 20px rgba(2,6,23,0.06);
+    }
+
+    h1{font-size:20px;margin:4px 0 0;line-height:1.15}
+    .price{
+      margin:10px 0 6px;
+      font-weight:800;
+      font-size:22px;
+      color:var(--accent);
+      display:inline-block;
+      padding:6px 12px;
+      border-radius:999px;
+      position:relative;
+      overflow:visible;
+      transform-origin:center;
+      animation:pricePop 1s cubic-bezier(.2,.9,.3,1) both;
+    }
+
+    /* shimmering stripe on price */
+    .price.shimmer::after{
+      content:"";
+      position:absolute;
+      left:-40%;
+      top:0;
+      width:40%;
+      height:100%;
+      background:linear-gradient(120deg, rgba(255,255,255,0.08), rgba(255,255,255,0.28), rgba(255,255,255,0.08));
+      transform:skewX(-25deg);
+      animation:shimmer 2s linear infinite;
+      pointer-events:none;
+    }
+    @keyframes shimmer{
+      0%{left:-40%}
+      100%{left:140%}
+    }
+
+    @keyframes pricePop{
+      0%{transform:scale(.92); opacity:0}
+      60%{transform:scale(1.06); opacity:1}
+      100%{transform:scale(1); opacity:1}
+    }
+
+    .desc{color:var(--muted);line-height:1.6;margin:0 6px 14px;font-size:15px}
+    .btn{
+      display:inline-block;
+      background:linear-gradient(90deg,var(--accent),var(--accent-2));
+      color:white;
+      text-decoration:none;
+      padding:10px 16px;
+      border-radius:10px;
+      font-weight:700;
+      box-shadow:0 12px 30px rgba(6,166,227,0.18);
+      transition:transform .18s ease, box-shadow .18s ease;
+    }
+    .btn:hover{transform:translateY(-4px); box-shadow:0 20px 40px rgba(0,196,255,0.18)}
+
+    .meta{margin-top:12px;color:#94a3b8;font-size:13px}
+
+    /* little animated bubbles */
+    .bubbles{
+      position:absolute;
+      right:-20px;
+      top:-30px;
+      width:80px;
+      height:120px;
+      pointer-events:none;
+    }
+    .bubble{
+      position:absolute;
+      border-radius:50%;
+      background:rgba(14,165,233,0.12);
+      animation:rise 6s linear infinite;
+      filter:blur(6px);
+    }
+    .bubble.b1{width:14px;height:14px;left:10px;bottom:10px; animation-duration:5s; animation-delay:-1s}
+    .bubble.b2{width:22px;height:22px;left:36px;bottom:24px; animation-duration:7s; animation-delay:-2s}
+    .bubble.b3{width:10px;height:10px;left:56px;bottom:6px; animation-duration:6s; animation-delay:-3s}
+    @keyframes rise{
+      0%{transform:translateY(0) scale(0.9); opacity:0.8}
+      50%{opacity:1}
+      100%{transform:translateY(-110px) scale(1.1); opacity:0}
+    }
+
+    /* responsive tweaks */
+    @media (max-width:460px){
+      body{padding:26px 12px}
+      .card{padding:14px}
+      .hero-img{max-height:200px}
     }
   </style>
-
 </head>
 <body>
 
-  <div class="container">
+  <div class="decor" aria-hidden="true"></div>
 
-    <img src="photo.jpg" alt="Lampu Mini Hias">
+  <div class="card" role="main">
+    <div class="image-wrap">
+      <div class="glow" aria-hidden="true"></div>
+      <img class="hero-img" src="photo.jpg" alt="Lampu Mini Hias" onerror="this.style.display='none';">
+    </div>
 
-    <h1>Lampu Mini Hias Cahaya Biru</h1>
-    <div class="price">Rp10.000</div>
+    <h1>Lampu Mini Hias — Cahaya Biru</h1>
+
+    <!-- price element: JS akan count-up dan menambahkan class shimmer -->
+    <div id="price" class="price">Rp<span id="price-num">0</span></div>
 
     <p class="desc">
-      Lampu mini hias dengan cahaya biru terang. Bisa dipakai sebagai dekorasi meja,
-      lampu tidur, atau lampu aksesoris untuk ruangan.  
-      Menggunakan bahan sederhana namun menghasilkan cahaya yang unik dan menarik.
+      Lampu mini hias dengan cahaya biru terang. Cocok untuk dekorasi meja, lampu tidur, atau aksesoris ruangan. Bahan sederhana, hasil menarik.
     </p>
 
-    <a class="btn" href="https://wa.me/6282226700517?text=Saya%20ingin%20beli%20lampu%20mini">
-      Pesan via WhatsApp
-    </a>
+    <!-- tombol WA (ganti nomor) -->
+    <a class="btn" id="wa-btn" href="https://wa.me/628XXXXXXXXXX?text=Saya%20ingin%20pesan%20lampu%20mini%20Rp10.000" target="_blank" rel="noopener">Pesan via WhatsApp</a>
 
+    <div class="meta">Stok terbatas • Pengiriman sesuai kesepakatan</div>
+
+    <div class="bubbles" aria-hidden="true">
+      <div class="bubble b1"></div>
+      <div class="bubble b2"></div>
+      <div class="bubble b3"></div>
+    </div>
   </div>
+
+  <script>
+    // Count-up animation for price (0 -> 10000)
+    (function(){
+      const target = 10000;
+      const el = document.getElementById('price-num');
+      const priceWrap = document.getElementById('price');
+      let current = 0;
+      const duration = 900; // ms
+      const frameRate = 30;
+      const totalFrames = Math.round(duration / (1000 / frameRate));
+      let frame = 0;
+      const easeOutQuad = t => t*(2-t);
+      function tick(){
+        frame++;
+        const progress = easeOutQuad(frame/totalFrames);
+        current = Math.round(target * progress);
+        el.textContent = current.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        if(frame < totalFrames){
+          requestAnimationFrame(tick);
+        } else {
+          // finished: add shimmer effect briefly
+          priceWrap.classList.add('shimmer');
+          setTimeout(()=> priceWrap.classList.remove('shimmer'), 2400);
+        }
+      }
+      requestAnimationFrame(tick);
+    })();
+  </script>
 
 </body>
 </html>
