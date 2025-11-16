@@ -31,7 +31,6 @@
       overflow-x:hidden;
     }
 
-    /* side & bottom glows (new) */
     .glow-left, .glow-right {
       position:fixed;
       top:0;
@@ -66,7 +65,6 @@
       100%{opacity:0.25}
     }
 
-    /* floating decorative circles */
     .decor{
       position:fixed;
       inset:auto 20px 40px auto;
@@ -107,7 +105,6 @@
       padding:12px;
     }
 
-    /* glow behind image */
     .glow{
       position:absolute;
       left:50%;
@@ -136,7 +133,48 @@
       box-shadow:0 8px 20px rgba(2,6,23,0.06);
     }
 
-    h1{font-size:20px;margin:4px 0 0;line-height:1.15}
+    /* ---- NEW: animated title & description ---- */
+    .title-anim {
+      display:inline-block;
+      font-size:20px;
+      margin:4px 0 2px;
+      line-height:1.15;
+      font-weight:700;
+      color: #062f4a;
+      transform-origin:center;
+      /* initial hidden state for slide-in */
+      opacity:0;
+      transform:translateY(-18px) scale(0.98);
+      animation: titleIn 900ms cubic-bezier(.2,.9,.3,1) forwards;
+      position:relative;
+    }
+
+    /* subtle shimmer bar across title */
+    .title-anim::after{
+      content:"";
+      position:absolute;
+      left:-45%;
+      top:0;
+      width:30%;
+      height:100%;
+      background:linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.18), rgba(255,255,255,0));
+      transform:skewX(-20deg);
+      filter:blur(6px);
+      opacity:0.0;
+      animation: titleShimmer 2200ms ease-in-out 700ms infinite;
+      pointer-events:none;
+    }
+    @keyframes titleIn{
+      0%{opacity:0; transform:translateY(-18px) scale(0.98)}
+      60%{opacity:1; transform:translateY(6px) scale(1.02)}
+      100%{opacity:1; transform:translateY(0) scale(1)}
+    }
+    @keyframes titleShimmer{
+      0%{left:-45%; opacity:0}
+      30%{opacity:0.9}
+      100%{left:150%; opacity:0}
+    }
+
     .price{
       margin:10px 0 6px;
       font-weight:800;
@@ -151,7 +189,6 @@
       animation:pricePop 1s cubic-bezier(.2,.9,.3,1) both;
     }
 
-    /* shimmering stripe on price */
     .price.shimmer::after{
       content:"";
       position:absolute;
@@ -175,7 +212,41 @@
       100%{transform:scale(1); opacity:1}
     }
 
-    .desc{color:var(--muted);line-height:1.6;margin:0 6px 14px;font-size:15px}
+    /* typing animation for description */
+    .desc-anim {
+      margin:0 6px 14px;
+      font-size:15px;
+      color:var(--muted);
+      line-height:1.6;
+      display:inline-block;
+      max-width:100%;
+      white-space:nowrap;
+      overflow:hidden;
+      border-right: 2px solid rgba(15,23,42,0.14); /* caret */
+      font-family: inherit;
+      box-sizing: content-box;
+      /* typing animation: type then delete */
+      animation:
+        typing 4200ms steps(40,end) 400ms 1,
+        blink-caret 700ms step-end infinite,
+        deleting 4200ms steps(40,end) 5200ms infinite;
+    }
+
+    /* typing keyframes: reveal width from 0 to full */
+    @keyframes typing {
+      0% { width: 0ch; }
+      100% { width: 68ch; } /* large enough to show sentence; will be clamped by container */
+    }
+    /* deleting: go back to 0 */
+    @keyframes deleting {
+      0% { width: 68ch; }
+      100% { width: 0ch; }
+    }
+    @keyframes blink-caret {
+      50% { border-color: transparent; }
+      100% { border-color: rgba(15,23,42,0.14); }
+    }
+
     .btn{
       display:inline-block;
       background:linear-gradient(90deg,var(--accent),var(--accent-2));
@@ -191,7 +262,6 @@
 
     .meta{margin-top:12px;color:#94a3b8;font-size:13px}
 
-    /* little animated bubbles */
     .bubbles{
       position:absolute;
       right:-20px;
@@ -216,13 +286,20 @@
       100%{transform:translateY(-110px) scale(1.1); opacity:0}
     }
 
-    /* responsive tweaks */
     @media (max-width:460px){
       body{padding:26px 12px}
       .card{padding:14px}
       .hero-img{max-height:200px}
       .glow-left, .glow-right { width:80px; filter:blur(36px); opacity:0.25; }
       .glow-bottom { height:140px; filter:blur(48px); opacity:0.25; }
+
+      /* mobile: make typing shorter and faster */
+      .desc-anim {
+        animation:
+          typing 3200ms steps(28,end) 300ms 1,
+          blink-caret 600ms step-end infinite,
+          deleting 3200ms steps(28,end) 4200ms infinite;
+      }
     }
   </style>
 </head>
@@ -241,12 +318,14 @@
       <img class="hero-img" src="photo.jpg" alt="Lampu Mini Hias" onerror="this.style.display='none';">
     </div>
 
-    <h1>Lampu Mini Hias — Cahaya Biru</h1>
+    <!-- Animated title -->
+    <h1><span class="title-anim">Lampu Mini Hias — Cahaya Biru</span></h1>
 
-    <!-- price element: JS akan count-up dan menambahkan class shimmer -->
+    <!-- price element -->
     <div id="price" class="price">Rp<span id="price-num">0</span></div>
 
-    <p class="desc">
+    <!-- Animated description (typing effect) -->
+    <p class="desc-anim" aria-live="polite">
       Lampu mini hias dengan cahaya biru terang. Cocok untuk dekorasi meja, lampu tidur, atau aksesoris ruangan. Bahan sederhana, hasil menarik.
     </p>
  
