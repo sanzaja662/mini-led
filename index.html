@@ -4,370 +4,413 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Lampu Mini Hias — Rp10.000</title>
+
   <style>
+    /* ---------- Theme & reset ---------- */
     :root{
-      --bg1:#eef6fb;
-      --bg2:#f8fbff;
-      --card:#ffffff;
-      --accent:#06a6e3;
-      --accent-2:#00c4ff;
-      --muted:#6b7280;
-      --radius:16px;
+      --bg-1: #061426;
+      --bg-2: #071827;
+      --card: #fbfdff;
+      --accent: #00d0ff;
+      --accent-2: #06a6e3;
+      --muted: #94a3b8;
+      --glass: rgba(255,255,255,0.06);
+      --radius: 16px;
     }
     *{box-sizing:border-box}
+    html,body{height:100%}
     body{
-      min-height:100vh;
       margin:0;
-      font-family: system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
-      background: radial-gradient(1200px 600px at 10% 10%, rgba(6,166,227,0.06), transparent 10%),
-                  radial-gradient(800px 400px at 90% 90%, rgba(0,196,255,0.04), transparent 10%),
-                  linear-gradient(180deg,var(--bg1),var(--bg2));
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background:
+        radial-gradient(800px 600px at 10% 10%, rgba(0,208,255,0.06), transparent 10%),
+        linear-gradient(180deg,var(--bg-1),var(--bg-2));
+      color: #e6f0fb;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
       display:flex;
-      align-items:flex-start;
+      align-items:center;
       justify-content:center;
-      padding:48px 12px;
-      color:#0f172a;
-      position:relative;
-      overflow-x:hidden;
+      padding:32px;
     }
 
-    .glow-left, .glow-right {
-      position:fixed;
-      top:0;
-      width:140px;
-      height:100%;
-      filter:blur(48px);
-      opacity:0.35;
-      animation: pulse 4s ease-in-out infinite;
-      z-index:-1;
-      pointer-events:none;
-    }
-    .glow-left { left:-40px; background: linear-gradient(180deg, rgba(6,166,227,0.12), rgba(0,196,255,0.06)); }
-    .glow-right { right:-40px; background: linear-gradient(180deg, rgba(0,196,255,0.12), rgba(6,166,227,0.06)); }
-
-    .glow-bottom {
-      position:fixed;
-      bottom:-80px;
-      left:0;
+    /* ---------- layout ---------- */
+    .wrap{
       width:100%;
-      height:220px;
-      background: radial-gradient(circle at 50% 0%, rgba(0,196,255,0.12), transparent 35%);
-      filter:blur(60px);
-      opacity:0.35;
-      animation: pulse 4s ease-in-out infinite;
-      z-index:-1;
+      max-width:920px;
+      display:grid;
+      grid-template-columns: 1fr 420px;
+      gap:24px;
+      align-items:start;
+    }
+
+    @media (max-width:960px){
+      .wrap{grid-template-columns:1fr; padding:0 8px}
+    }
+
+    /* ---------- left content (text + animations) ---------- */
+    .panel {
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      padding:28px;
+      border-radius: var(--radius);
+      box-shadow: 0 30px 80px rgba(2,6,23,0.6);
+      position:relative;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,0.03);
+    }
+
+    /* decorative animated particles behind */
+    .particles {
+      position:absolute;
+      inset: -20% -10% auto -10%;
+      height:140%;
       pointer-events:none;
-    }
-
-    @keyframes pulse{
-      0%{opacity:0.25}
-      50%{opacity:0.6}
-      100%{opacity:0.25}
-    }
-
-    .decor{
-      position:fixed;
-      inset:auto 20px 40px auto;
-      width:120px;height:120px;
-      border-radius:50%;
-      background:linear-gradient(180deg, rgba(6,166,227,0.12), rgba(0,196,255,0.06));
-      filter:blur(16px);
       z-index:0;
-      transform:translateY(0);
-      animation: drift 8s linear infinite;
+      filter:blur(12px) saturate(1.15);
       opacity:0.9;
     }
-    @keyframes drift{
-      0%{transform:translateY(0) translateX(0)}
-      50%{transform:translateY(-18px) translateX(-8px)}
-      100%{transform:translateY(0) translateX(0)}
+    .particles span{
+      position:absolute;
+      width:10px;height:10px;border-radius:50%;
+      background:linear-gradient(90deg,var(--accent),var(--accent-2));
+      opacity:0.12;
+      animation: floatUp linear infinite;
+    }
+    @keyframes floatUp{
+      from{transform:translateY(0) translateX(0) scale(0.6); opacity:0.22}
+      to{transform:translateY(-380px) translateX(60px) scale(1.2); opacity:0}
     }
 
-    .card{
+    /* headline with per-letter animation */
+    .headline {
       position:relative;
+      font-weight:800;
+      font-size:36px;
+      line-height:1.02;
+      color: #eafcff;
+      margin:6px 0 12px;
       z-index:2;
-      width:100%;
-      max-width:420px;
-      background:var(--card);
-      border-radius:var(--radius);
-      padding:18px;
-      box-shadow: 0 18px 50px rgba(2,6,23,0.09);
-      text-align:center;
       overflow:visible;
+      display:inline-block;
+    }
+    .headline .word { display:inline-block; white-space:nowrap }
+    .headline .char {
+      display:inline-block;
+      transform-origin:center;
+      opacity:0;
+      transform:translateY(18px) rotateX(20deg) scale(.98);
+      animation: charIn 800ms cubic-bezier(.2,.9,.3,1) forwards;
+    }
+    /* stagger effect by nth-child via JS will set style inline */
+
+    @keyframes charIn{
+      0%{opacity:0; transform:translateY(18px) rotateX(20deg) scale(.98)}
+      60%{opacity:1; transform:translateY(-6px) rotateX(0) scale(1.02)}
+      100%{opacity:1; transform:translateY(0) rotateX(0) scale(1)}
     }
 
-    .image-wrap{
-      position:relative;
+    .subheading {
+      margin:8px 0 18px;
+      color:var(--muted);
+      font-size:15px;
+      z-index:2;
+      opacity:0;
+      transform:translateY(8px) scale(.995);
+      animation: fadeUp .9s cubic-bezier(.2,.9,.3,1) 0.9s forwards;
+    }
+    @keyframes fadeUp{ to {opacity:1; transform:none} }
+
+    /* features list with icons + staggered slide */
+    .features {
+      margin:18px 0 22px;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      z-index:2;
+    }
+    .feature {
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+      background: linear-gradient(90deg, rgba(255,255,255,0.02), transparent);
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,0.02);
+      transform:translateX(-18px);
+      opacity:0;
+      animation: featureIn .7s cubic-bezier(.2,.9,.3,1) forwards;
+    }
+    .feature .dot{
+      min-width:36px; height:36px; border-radius:10px;
+      background:linear-gradient(135deg,var(--accent),var(--accent-2));
+      display:flex; align-items:center; justify-content:center;
+      font-weight:800; color:#021423; box-shadow:0 8px 20px rgba(0,196,255,0.12);
+      flex-shrink:0;
+    }
+    .feature .text{font-size:14px; color:#e6f0fb}
+    @keyframes featureIn{ to {transform:none; opacity:1} }
+
+    /* CTA row */
+    .cta-row{
+      display:flex; gap:12px; align-items:center; margin-top:12px; z-index:2;
+    }
+    .price-tag{
+      background: linear-gradient(90deg,var(--accent),var(--accent-2));
+      padding:10px 14px; border-radius:12px; font-weight:900; color:#021423;
+      box-shadow:0 18px 50px rgba(0,196,255,0.12);
+      transform-origin:center;
+      animation: popPrice .9s cubic-bezier(.2,.9,.3,1) 1.2s both;
+    }
+    @keyframes popPrice{ from{transform:scale(.88); opacity:0} to{transform:scale(1); opacity:1} }
+
+    .btn-primary{
+      display:inline-flex; align-items:center; gap:10px;
+      background:transparent; color:var(--accent); text-decoration:none;
+      padding:10px 14px; border-radius:12px; border:1px solid rgba(0,208,255,0.12);
+      font-weight:700; backdrop-filter: blur(6px);
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .btn-primary:hover{ transform:translateY(-6px); box-shadow:0 30px 60px rgba(0,208,255,0.08) }
+
+    .btn-primary .pulse {
+      width:8px; height:8px; border-radius:50%;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.9), rgba(255,255,255,0.5));
+      box-shadow: 0 0 10px rgba(0,208,255,0.7);
+      animation: pulse 1.6s infinite;
+    }
+
+    @keyframes pulse{ 0%{transform:scale(.9)}50%{transform:scale(1.4); opacity:0.6}100%{transform:scale(.9); opacity:1} }
+
+    /* ---------- right panel (image card) ---------- */
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+      border-radius:16px; padding:18px;
+      position:relative; overflow:visible; border:1px solid rgba(255,255,255,0.03);
+      box-shadow: 0 30px 80px rgba(2,6,23,0.6);
+      display:flex; flex-direction:column; gap:10px; align-items:center;
+    }
+    .hero {
+      width:100%;
       border-radius:12px;
       overflow:hidden;
-      margin-bottom:14px;
-      background:linear-gradient(180deg, rgba(14,165,233,0.04), rgba(14,165,233,0.01));
-      padding:12px;
-    }
-
-    .glow{
-      position:absolute;
-      left:50%;
-      top:50%;
-      transform:translate(-50%,-40%);
-      width:260px;height:160px;
-      background:radial-gradient(circle at 50% 40%, rgba(0,196,255,0.28), rgba(6,166,227,0.08) 40%, transparent 55%);
-      filter:blur(18px);
-      z-index:0;
-      pointer-events:none;
-      animation:glowPulse 2.5s ease-in-out infinite;
-    }
-    @keyframes glowPulse{
-      0%{opacity:0.9; transform:translate(-50%,-40%) scale(0.98)}
-      50%{opacity:1; transform:translate(-50%,-40%) scale(1.04)}
-      100%{opacity:0.9; transform:translate(-50%,-40%) scale(0.98)}
-    }
-
-    .hero-img{
       position:relative;
-      z-index:1;
-      width:100%;
-      max-height:280px;
-      object-fit:cover;
-      border-radius:8px;
-      box-shadow:0 8px 20px rgba(2,6,23,0.06);
+      padding:8px;
+      background: linear-gradient(180deg, rgba(0,208,255,0.03), transparent);
+      box-shadow: inset 0 -8px 30px rgba(0,0,0,0.15);
     }
-
-    /* ---- NEW: animated title & description ---- */
-    .title-anim {
-      display:inline-block;
-      font-size:20px;
-      margin:4px 0 2px;
-      line-height:1.15;
-      font-weight:700;
-      color: #062f4a;
+    .hero img{
+      width:100%; height:260px; object-fit:cover; border-radius:8px;
       transform-origin:center;
-      /* initial hidden state for slide-in */
-      opacity:0;
-      transform:translateY(-18px) scale(0.98);
-      animation: titleIn 900ms cubic-bezier(.2,.9,.3,1) forwards;
-      position:relative;
+      transition: transform .9s cubic-bezier(.2,.9,.3,1), box-shadow .9s;
+      box-shadow:0 12px 30px rgba(2,6,23,0.5);
+    }
+    .hero:hover img{ transform:translateY(-6px) scale(1.02); box-shadow:0 30px 80px rgba(0,0,0,0.6) }
+
+    /* floating labels + ribbons */
+    .ribbon{
+      position:absolute; left:10px; top:10px; background:linear-gradient(90deg,var(--accent),var(--accent-2));
+      color:#021423; padding:6px 10px; border-radius:10px; font-weight:800; font-size:12px;
+      transform:rotate(-6deg); box-shadow:0 14px 40px rgba(0,208,255,0.08);
+      z-index:4;
     }
 
-    /* subtle shimmer bar across title */
-    .title-anim::after{
-      content:"";
-      position:absolute;
-      left:-45%;
-      top:0;
-      width:30%;
-      height:100%;
-      background:linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.18), rgba(255,255,255,0));
-      transform:skewX(-20deg);
-      filter:blur(6px);
-      opacity:0.0;
-      animation: titleShimmer 2200ms ease-in-out 700ms infinite;
-      pointer-events:none;
+    .info{
+      width:100%; display:flex; justify-content:space-between; align-items:center; gap:10px;
     }
-    @keyframes titleIn{
-      0%{opacity:0; transform:translateY(-18px) scale(0.98)}
-      60%{opacity:1; transform:translateY(6px) scale(1.02)}
-      100%{opacity:1; transform:translateY(0) scale(1)}
+    .specs { color:var(--muted); font-size:13px }
+    .buy-row { display:flex; gap:10px; align-items:center }
+
+    /* micro-animations: sparkles */
+    .sparkle {
+      position:absolute; border-radius:50%; pointer-events:none;
+      mix-blend-mode:screen; opacity:0.9;
+      animation: sparkleMove 2.6s linear infinite;
     }
-    @keyframes titleShimmer{
-      0%{left:-45%; opacity:0}
-      30%{opacity:0.9}
-      100%{left:150%; opacity:0}
+    @keyframes sparkleMove{
+      0%{transform:translate(0,0) scale(.6); opacity:1}
+      50%{transform:translate(-16px,-28px) scale(1.2); opacity:0.9}
+      100%{transform:translate(8px,-56px) scale(.8); opacity:0}
     }
 
-    .price{
-      margin:10px 0 6px;
-      font-weight:800;
-      font-size:22px;
-      color:var(--accent);
-      display:inline-block;
-      padding:6px 12px;
-      border-radius:999px;
-      position:relative;
-      overflow:visible;
-      transform-origin:center;
-      animation:pricePop 1s cubic-bezier(.2,.9,.3,1) both;
-    }
+    /* footer small text */
+    .small { font-size:12px; color:var(--muted); margin-top:6px; text-align:center }
 
-    .price.shimmer::after{
-      content:"";
-      position:absolute;
-      left:-40%;
-      top:0;
-      width:40%;
-      height:100%;
-      background:linear-gradient(120deg, rgba(255,255,255,0.08), rgba(255,255,255,0.28), rgba(255,255,255,0.08));
-      transform:skewX(-25deg);
-      animation:shimmer 2s linear infinite;
-      pointer-events:none;
-    }
-    @keyframes shimmer{
-      0%{left:-40%}
-      100%{left:140%}
-    }
-
-    @keyframes pricePop{
-      0%{transform:scale(.92); opacity:0}
-      60%{transform:scale(1.06); opacity:1}
-      100%{transform:scale(1); opacity:1}
-    }
-
-    /* typing animation for description */
-    .desc-anim {
-      margin:0 6px 14px;
-      font-size:15px;
-      color:var(--muted);
-      line-height:1.6;
-      display:inline-block;
-      max-width:100%;
-      white-space:nowrap;
-      overflow:hidden;
-      border-right: 2px solid rgba(15,23,42,0.14); /* caret */
-      font-family: inherit;
-      box-sizing: content-box;
-      /* typing animation: type then delete */
-      animation:
-        typing 4200ms steps(40,end) 400ms 1,
-        blink-caret 700ms step-end infinite,
-        deleting 4200ms steps(40,end) 5200ms infinite;
-    }
-
-    /* typing keyframes: reveal width from 0 to full */
-    @keyframes typing {
-      0% { width: 0ch; }
-      100% { width: 68ch; } /* large enough to show sentence; will be clamped by container */
-    }
-    /* deleting: go back to 0 */
-    @keyframes deleting {
-      0% { width: 68ch; }
-      100% { width: 0ch; }
-    }
-    @keyframes blink-caret {
-      50% { border-color: transparent; }
-      100% { border-color: rgba(15,23,42,0.14); }
-    }
-
-    .btn{
-      display:inline-block;
-      background:linear-gradient(90deg,var(--accent),var(--accent-2));
-      color:white;
-      text-decoration:none;
-      padding:10px 16px;
-      border-radius:10px;
-      font-weight:700;
-      box-shadow:0 12px 30px rgba(6,166,227,0.18);
-      transition:transform .18s ease, box-shadow .18s ease;
-    }
-    .btn:hover{transform:translateY(-4px); box-shadow:0 20px 40px rgba(0,196,255,0.18)}
-
-    .meta{margin-top:12px;color:#94a3b8;font-size:13px}
-
-    .bubbles{
-      position:absolute;
-      right:-20px;
-      top:-30px;
-      width:80px;
-      height:120px;
-      pointer-events:none;
-    }
-    .bubble{
-      position:absolute;
-      border-radius:50%;
-      background:rgba(14,165,233,0.12);
-      animation:rise 6s linear infinite;
-      filter:blur(6px);
-    }
-    .bubble.b1{width:14px;height:14px;left:10px;bottom:10px; animation-duration:5s; animation-delay:-1s}
-    .bubble.b2{width:22px;height:22px;left:36px;bottom:24px; animation-duration:7s; animation-delay:-2s}
-    .bubble.b3{width:10px;height:10px;left:56px;bottom:6px; animation-duration:6s; animation-delay:-3s}
-    @keyframes rise{
-      0%{transform:translateY(0) scale(0.9); opacity:0.8}
-      50%{opacity:1}
-      100%{transform:translateY(-110px) scale(1.1); opacity:0}
-    }
-
-    @media (max-width:460px){
-      body{padding:26px 12px}
-      .card{padding:14px}
-      .hero-img{max-height:200px}
-      .glow-left, .glow-right { width:80px; filter:blur(36px); opacity:0.25; }
-      .glow-bottom { height:140px; filter:blur(48px); opacity:0.25; }
-
-      /* mobile: make typing shorter and faster */
-      .desc-anim {
-        animation:
-          typing 3200ms steps(28,end) 300ms 1,
-          blink-caret 600ms step-end infinite,
-          deleting 3200ms steps(28,end) 4200ms infinite;
-      }
+    /* responsive tweaks */
+    @media (max-width:640px){
+      .wrap{grid-template-columns:1fr}
+      .hero img{height:200px}
+      .headline{font-size:28px}
     }
   </style>
 </head>
 <body>
 
-  <!-- side & bottom glows -->
-  <div class="glow-left" aria-hidden="true"></div>
-  <div class="glow-right" aria-hidden="true"></div>
-  <div class="glow-bottom" aria-hidden="true"></div>
+  <div class="wrap">
 
-  <div class="decor" aria-hidden="true"></div>
+    <!-- LEFT PANEL -->
+    <section class="panel" aria-labelledby="main-title">
+      <div class="particles" aria-hidden="true">
+        <!-- dynamic particles will be injected by JS -->
+      </div>
 
-  <div class="card" role="main">
-    <div class="image-wrap">
-      <div class="glow" aria-hidden="true"></div>
-      <img class="hero-img" src="photo.jpg" alt="Lampu Mini Hias" onerror="this.style.display='none';">
-    </div>
+      <h1 id="main-title" class="headline" aria-live="polite"></h1>
 
-    <!-- Animated title -->
-    <h1><span class="title-anim">Lampu Mini Hias — Cahaya Biru</span></h1>
+      <div class="subheading" id="subheading">Dekorasi lampu mini unik — murah, estetik, dan cocok untuk hadiah.</div>
 
-    <!-- price element -->
-    <div id="price" class="price">Rp<span id="price-num">0</span></div>
+      <div class="features" id="features">
+        <div class="feature" style="animation-delay:1.05s">
+          <div class="dot">A</div>
+          <div class="text"><strong>Tampilan Estetik</strong><br><small>Memberi nuansa unik pada meja & kamar.</small></div>
+        </div>
+        <div class="feature" style="animation-delay:1.20s">
+          <div class="dot">B</div>
+          <div class="text"><strong>Hemat & Praktis</strong><br><small>Harga Rp10.000 — mudah dibawa.</small></div>
+        </div>
+        <div class="feature" style="animation-delay:1.35s">
+          <div class="dot">C</div>
+          <div class="text"><strong>Mudah Dipakai</strong><br><small>Cukup colok/isi daya; cocok sebagai lampu aksen.</small></div>
+        </div>
+      </div>
 
-    <!-- Animated description (typing effect) -->
-    <p class="desc-anim" aria-live="polite">
-      Lampu mini hias dengan cahaya biru terang. Cocok untuk dekorasi meja, lampu tidur, atau aksesoris ruangan. Bahan sederhana, hasil menarik.
-    </p>
- 
-    <a class="btn" id="wa-btn" href="https://wa.me/6282226700517?text=Saya%20ingin%20pesan%20lampu%20mini%20Rp10.000" target="_blank" rel="noopener">Pesan via WhatsApp</a>
+      <div class="cta-row" role="region" aria-label="Pesan">
+        <div class="price-tag" aria-hidden="true">Rp <span id="price-num-left">10.000</span></div>
+        <a class="btn-primary" id="waLeft" href="https://wa.me/6282226700517?text=Saya%20ingin%20pesan%20lampu%20mini%20Rp10.000" target="_blank" rel="noopener">
+          <span class="pulse" aria-hidden="true"></span>
+          Pesan Sekarang
+        </a>
+      </div>
 
-    <div class="meta">Stok terbatas • Pengiriman sesuai kesepakatan</div>
+      <div class="small">Gratis konsultasi foto produk untuk pembelian 5+ unit • Stok terbatas</div>
+    </section>
 
-    <div class="bubbles" aria-hidden="true">
-      <div class="bubble b1"></div>
-      <div class="bubble b2"></div>
-      <div class="bubble b3"></div>
-    </div>
+    <!-- RIGHT CARD -->
+    <aside class="card" aria-labelledby="card-title">
+      <div class="ribbon">Rp10.000</div>
+
+      <div class="hero" aria-hidden="false">
+        <img src="photo.jpg" alt="Lampu Mini Hias - Cahaya Biru" id="heroImg">
+        <!-- sparkles -->
+        <div class="sparkle" style="width:10px;height:10px; right:18%; top:12%; background:linear-gradient(90deg,var(--accent),var(--accent-2)); animation-delay:.2s"></div>
+        <div class="sparkle" style="width:6px;height:6px; left:14%; top:30%; background:linear-gradient(90deg,var(--accent),var(--accent-2)); animation-delay:.6s"></div>
+      </div>
+
+      <div class="info">
+        <div class="specs">
+          <div><strong>Warna:</strong> Biru</div>
+          <div><strong>Ukuran:</strong> Mini (portable)</div>
+        </div>
+
+        <div class="buy-row">
+          <a class="btn-primary" id="waRight" href="https://wa.me/6282226700517?text=Saya%20ingin%20pesan%20lampu%20mini%20Rp10.000" target="_blank" rel="noopener">
+            <span class="pulse" aria-hidden="true"></span>
+            Pesan via WhatsApp
+          </a>
+        </div>
+      </div>
+
+      <div class="small">Pengiriman: JNE/SiCepat atau COD sesuai wilayah</div>
+    </aside>
+
   </div>
 
   <script>
-    // Count-up animation for price (0 -> 10000)
-    (function(){
-      const target = 10000;
-      const el = document.getElementById('price-num');
-      const priceWrap = document.getElementById('price');
-      let current = 0;
-      const duration = 900; // ms
-      const frameRate = 30;
-      const totalFrames = Math.round(duration / (1000 / frameRate));
-      let frame = 0;
-      const easeOutQuad = t => t*(2-t);
-      function tick(){
-        frame++;
-        const progress = easeOutQuad(frame/totalFrames);
-        current = Math.round(target * progress);
-        el.textContent = current.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-        if(frame < totalFrames){
-          requestAnimationFrame(tick);
-        } else {
-          // finished: add shimmer effect briefly
-          priceWrap.classList.add('shimmer');
-          setTimeout(()=> priceWrap.classList.remove('shimmer'), 2400);
-        }
+    /* ---------- Helper: create decorative particles ---------- */
+    (function createParticles(){
+      const container = document.querySelector('.particles');
+      const COUNT = 18;
+      for(let i=0;i<COUNT;i++){
+        const s = document.createElement('span');
+        const size = 6 + Math.random()*18;
+        s.style.width = s.style.height = size + 'px';
+        s.style.left = (10 + Math.random()*80) + '%';
+        s.style.top = (60 + Math.random()*30) + '%';
+        s.style.opacity = 0.08 + Math.random()*0.2;
+        s.style.animationDuration = 6 + Math.random()*6 + 's';
+        s.style.animationDelay = (-Math.random()*10) + 's';
+        container.appendChild(s);
       }
-      requestAnimationFrame(tick);
     })();
-  </script>
 
+    /* ---------- Headline per-letter animation (staggered) ---------- */
+    (function animateHeadline(){
+      const titleText = "Lampu Mini Hias — Cahaya Biru Estetik";
+      const el = document.getElementById('main-title');
+      // split and wrap letters
+      const frag = document.createDocumentFragment();
+      Array.from(titleText).forEach((ch, i) => {
+        const span = document.createElement('span');
+        span.className = 'char';
+        span.textContent = ch === ' ' ? '\u00A0' : ch;
+        span.style.animationDelay = (0.08 * i) + 's';
+        frag.appendChild(span);
+      });
+      el.appendChild(frag);
+    })();
+
+    /* ---------- Stagger features appear (already have CSS delays inline) ---------- */
+
+    /* ---------- Price pulse + micro effect ---------- */
+    (function pricePulse(){
+      const priceEls = document.querySelectorAll('.price-tag, .ribbon');
+      priceEls.forEach((el,i)=>{
+        el.animate([
+          { transform: 'scale(0.98)', opacity: 0 },
+          { transform: 'scale(1.06)', opacity: 1 },
+          { transform: 'scale(1)', opacity: 1 }
+        ], { duration: 900 + i*120, easing:'cubic-bezier(.2,.9,.3,1)', fill:'forwards', delay: 1100 });
+      });
+    })();
+
+    /* ---------- Entrance for feature items (uses inline delays set in HTML) ---------- */
+    document.querySelectorAll('.feature').forEach((f, idx) => {
+      const d = 1000 + idx*120;
+      f.style.animationDelay = (d/1000) + 's';
+    });
+
+    /* ---------- subtle hero image float motion ---------- */
+    (function heroFloat(){
+      const img = document.getElementById('heroImg');
+      if(!img) return;
+      let t = 0;
+      function loop(){
+        t += 0.008;
+        const y = Math.sin(t) * 6;
+        const x = Math.cos(t*0.7) * 4;
+        img.style.transform = `translate(${x}px, ${y}px) scale(1)`;
+        requestAnimationFrame(loop);
+      }
+      requestAnimationFrame(loop);
+    })();
+
+    /* ---------- CTA small interaction: wobble when hovered (JS for click feedback) ---------- */
+    document.querySelectorAll('.btn-primary').forEach(btn=>{
+      btn.addEventListener('mouseenter', ()=> {
+        btn.animate([{transform:'translateY(0)'},{transform:'translateY(-6px)'}],{duration:220, fill:'forwards', easing:'cubic-bezier(.2,.9,.3,1)'});
+      });
+      btn.addEventListener('mouseleave', ()=> {
+        btn.animate([{transform:'translateY(-6px)'},{transform:'translateY(0)'}],{duration:220, fill:'forwards', easing:'cubic-bezier(.2,.9,.3,1)'});
+      });
+    });
+
+    /* ---------- Accessibility: announce price and summary after load ---------- */
+    window.addEventListener('load', () => {
+      const sub = document.getElementById('subheading');
+      sub.setAttribute('aria-hidden','false');
+    });
+
+    /* ---------- Small fallback: if image missing hide hero box nicely ---------- */
+    document.getElementById('heroImg').addEventListener('error', function(){
+      this.style.display='none';
+      // create placeholder
+      const parent = this.parentElement;
+      const ph = document.createElement('div');
+      ph.style.width='100%'; ph.style.height='260px';
+      ph.style.borderRadius='8px'; ph.style.display='flex';
+      ph.style.alignItems='center'; ph.style.justifyContent='center';
+      ph.style.background='linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01))';
+      ph.innerHTML = '<div style="color:var(--muted); font-size:14px">Foto produk belum diupload (photo.jpg)</div>';
+      parent.appendChild(ph);
+    });
+  </script>
 </body>
 </html>
